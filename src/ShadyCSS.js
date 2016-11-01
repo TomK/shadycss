@@ -169,20 +169,22 @@ export let ShadyCSS = {
         this._applyStyleProperties(host, styleInfo);
       }
     }
-    let root = this._isRootOwner(host) ? host : host.shadowRoot;
-    // note: some elements may not have a root!
-    if (root) {
-      this._applyToDescendants(root);
-    }
+    this._applyToDescendants(host);
   },
-  _applyToDescendants(root) {
-    let c$ = root.children;
-    for (let i = 0, c; i < c$.length; i++) {
-      c = c$[i];
-      if (c.shadowRoot) {
-        this.applyStyle(c);
+  _applyToDescendants(host) {
+    let c$ = host.children;
+    for(let i = 0; i < c$.length; i++)
+    {
+      this.applyStyle(c$[i]);
+    }
+    // note: some elements may not have a root!
+    if((!this._isRootOwner(host)) && host.shadowRoot)
+    {
+      let c$ = host.shadowRoot.children;
+      for(let i = 0; i < c$.length; i++)
+      {
+        this.applyStyle(c$[i]);
       }
-      this._applyToDescendants(c);
     }
   },
   _styleOwnerForNode(node) {
