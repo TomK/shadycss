@@ -152,14 +152,16 @@ export let ShadyCSS = {
     Object.assign(styleInfo.overrideStyleProperties, overrideProps);
     if (this.nativeCss) {
       let template = templateMap[is];
-      if (template && template.__applyShimInvalid && template._style) {
+      if (template && template._style) {
         // update template
-        ApplyShim.transformRules(template._styleAst, is);
-        template._style.textContent = StyleTransformer.elementStyles(host, styleInfo.styleRules);
+        if (template.__applyShimInvalid) {
+          ApplyShim.transformRules(template._styleAst, is);
+          template._style.textContent = StyleTransformer.elementStyles(host, styleInfo.styleRules);
+        }
         // update instance if native shadowdom
         if (this.nativeShadow) {
           let style = host.shadowRoot.querySelector('style');
-          style.textContent = StyleTransformer.elementStyles(host, styleInfo.styleRules);
+          style.textContent = template._style.textContent;
         }
         styleInfo.styleRules = template._styleAst;
       }
