@@ -159,7 +159,7 @@ export let ShadyCSS = {
           template._style.textContent = StyleTransformer.elementStyles(host, styleInfo.styleRules);
         }
         // update instance if native shadowdom
-        if (this.nativeShadow) {
+        if (this.nativeShadow && host.shadowRoot) {
           let style = host.shadowRoot.querySelector('style');
           style.textContent = template._style.textContent;
         }
